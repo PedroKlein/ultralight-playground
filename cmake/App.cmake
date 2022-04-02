@@ -77,7 +77,7 @@ MACRO(ADD_APP source_list)
 
   # Copy all binaries to target directory
   add_custom_command(TARGET ${APP_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}" $<TARGET_FILE_DIR:${APP_NAME}>) 
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${ULTRALIGHT_BINARY_DIR} $<TARGET_FILE_DIR:${APP_NAME}>) 
 
   if (APPLE)
     set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/../Resources/assets") 
@@ -85,7 +85,7 @@ MACRO(ADD_APP source_list)
     set(ASSETS_PATH "$<TARGET_FILE_DIR:${APP_NAME}>/assets") 
   endif () 
 
-  # Copy assets to assets path
+ # Copy assets to assets path
   add_custom_command(TARGET ${APP_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/app/build/" "${ASSETS_PATH}")
 
@@ -102,8 +102,8 @@ MACRO(ADD_APP source_list)
   endif () 
 
   # Copy resources to resources path
-  add_custom_command(TARGET ${APP_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}/resources/" "${RESOURCES_PATH}")
+  # add_custom_command(TARGET ${APP_NAME} POST_BUILD
+  #   COMMAND ${CMAKE_COMMAND} -E copy_directory "${ULTRALIGHT_BINARY_DIR}/resources/" "${RESOURCES_PATH}")
 
   if (APPLE)
     # Copy icon to root resource path

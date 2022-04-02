@@ -88,19 +88,13 @@ void MyApp::OnResize(uint32_t width, uint32_t height) {
   overlay_->Resize(width, height);
 }
 
-void MyApp::OnFinishLoading(ultralight::View* caller,
-                            uint64_t frame_id,
-                            bool is_main_frame,
-                            const String& url) {
+void MyApp::OnFinishLoading(ultralight::View* caller) {
   ///
   /// This is called when a frame finishes loading on the page.
   ///
 }
 
-void MyApp::OnDOMReady(ultralight::View* caller,
-                       uint64_t frame_id,
-                       bool is_main_frame,
-                       const String& url) {
+void MyApp::OnDOMReady(ultralight::View* caller) {
   ///
   /// This is called when a frame's DOM has finished loading on the page.
   ///
