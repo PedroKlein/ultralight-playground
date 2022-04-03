@@ -1,7 +1,12 @@
 import React from "react";
+import Test from "./components/Test";
 
 const App: React.FC = () => {
-  return <div>PLAYGROUND</div>;
+  return (
+    <>
+      <Test />
+    </>
+  );
 };
 
 export default App;

@@ -1,10 +1,13 @@
-project(MyApp C CXX)
-cmake_minimum_required(VERSION 3.3.2)
+cmake_minimum_required(VERSION 3.0.0)
+
+project(Playground VERSION 0.1.0 LANGUAGES CXX)
 
 include(cmake/App.cmake)
 
-set(SOURCES "src/MyApp.h"
-            "src/MyApp.cpp"
-            "src/main.cpp")
+FILE(GLOB_RECURSE SOURCES src/*)
+
+# set(SOURCES "src/UI/ui.h"
+#             "src/UI/ui.cpp"
+#             "src/main.cpp")
 
 add_app("${SOURCES}")

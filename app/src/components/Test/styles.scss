@@ -1,0 +1,9 @@
+button {
+  padding: 14px;
+  background-color: gray;
+
+  &:hover {
+    cursor: pointer;
+    background-color: azure;
+  }
+}

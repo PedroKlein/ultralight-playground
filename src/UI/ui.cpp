@@ -1,9 +1,10 @@
-#include "MyApp.h"
+#include "ui.h"
 
-#define WINDOW_WIDTH  600
+#define WINDOW_WIDTH 600
 #define WINDOW_HEIGHT 400
 
-MyApp::MyApp() {  
+UI::UI()
+{
   app_ = App::Create();
 
   ///
@@ -11,7 +12,7 @@ MyApp::MyApp() {
   /// kWindowFlags_Resizable.
   ///
   window_ = Window::Create(app_->main_monitor(), WINDOW_WIDTH, WINDOW_HEIGHT,
-    false, kWindowFlags_Titled | kWindowFlags_Resizable);
+                           false, kWindowFlags_Titled | kWindowFlags_Resizable);
 
   ///
   /// Tell our app to use 'window' as our main window.
@@ -37,38 +38,41 @@ MyApp::MyApp() {
   overlay_->view()->LoadURL("file:///index.html");
 
   ///
-  /// Register our MyApp instance as an AppListener so we can handle the
+  /// Register our UI instance as an AppListener so we can handle the
   /// App's OnUpdate event below.
   ///
   app_->set_listener(this);
 
   ///
-  /// Register our MyApp instance as a WindowListener so we can handle the
+  /// Register our UI instance as a WindowListener so we can handle the
   /// Window's OnResize event below.
   ///
   window_->set_listener(this);
 
   ///
-  /// Register our MyApp instance as a LoadListener so we can handle the
+  /// Register our UI instance as a LoadListener so we can handle the
   /// View's OnFinishLoading and OnDOMReady events below.
   ///
   overlay_->view()->set_load_listener(this);
 
   ///
-  /// Register our MyApp instance as a ViewListener so we can handle the
+  /// Register our UI instance as a ViewListener so we can handle the
   /// View's OnChangeCursor and OnChangeTitle events below.
   ///
   overlay_->view()->set_view_listener(this);
 }
 
-MyApp::~MyApp() {
+UI::~UI()
+{
 }
 
-void MyApp::Run() {
+void UI::Run()
+{
   app_->Run();
 }
 
-void MyApp::OnUpdate() {
+void UI::OnUpdate()
+{
   ///
   /// This is called repeatedly from the application's update loop.
   ///
@@ -76,10 +80,12 @@ void MyApp::OnUpdate() {
   ///
 }
 
-void MyApp::OnClose() {
+void UI::OnClose()
+{
 }
 
-void MyApp::OnResize(uint32_t width, uint32_t height) {
+void UI::OnResize(uint32_t width, uint32_t height)
+{
   ///
   /// This is called whenever the window changes size (values in pixels).
   ///
@@ -88,22 +94,31 @@ void MyApp::OnResize(uint32_t width, uint32_t height) {
   overlay_->Resize(width, height);
 }
 
-void MyApp::OnFinishLoading(ultralight::View* caller) {
+void UI::OnFinishLoading(ultralight::View *caller)
+{
   ///
   /// This is called when a frame finishes loading on the page.
   ///
 }
 
-void MyApp::OnDOMReady(ultralight::View* caller) {
+void UI::OnDOMReady(ultralight::View *caller)
+{
   ///
   /// This is called when a frame's DOM has finished loading on the page.
   ///
   /// This is the best time to setup any JavaScript bindings.
   ///
+
+  SetJSContext(caller->js_context());
+
+  JSObject global = JSGlobalObject();
+
+  global["GetMessage"] = BindJSCallbackWithRetval(&UI::GetMessage);
 }
 
-void MyApp::OnChangeCursor(ultralight::View* caller,
-                           Cursor cursor) {
+void UI::OnChangeCursor(ultralight::View *caller,
+                        Cursor cursor)
+{
   ///
   /// This is called whenever the page requests to change the cursor.
   ///
@@ -112,12 +127,21 @@ void MyApp::OnChangeCursor(ultralight::View* caller,
   window_->SetCursor(cursor);
 }
 
-void MyApp::OnChangeTitle(ultralight::View* caller,
-                          const String& title) {
+void UI::OnChangeTitle(ultralight::View *caller,
+                       const String &title)
+{
   ///
   /// This is called whenever the page requests to change the title.
   ///
   /// We update the main window's title here.
   ///
   window_->SetTitle(title.utf8().data());
+}
+
+JSValue UI::GetMessage(const JSObject &thisObject, const JSArgs &args)
+{
+  ///
+  /// Return our message to JavaScript as a JSValue.
+  ///
+  return JSValue("Hello from C++!<br/>Ultralight rocks!");
 }
