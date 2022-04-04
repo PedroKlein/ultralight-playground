@@ -150,13 +150,7 @@ void UI::OnChangeTitle(ultralight::View *caller,
 
 JSValue UI::GetData(const JSObject &obj, const JSArgs &args)
 {
-  JSValue resData = JSValue(data.getData());
-  JSValue resId = JSValue(data.getId());
-  JSObject res;
-  JSObjectSetProperty(context_, res, JSStringCreateWithUTF8CString("data"), resData, NULL, NULL);
-  JSObjectSetProperty(context_, res, JSStringCreateWithUTF8CString("id"), resId, NULL, NULL);
-
-  return res;
+  return data.toJsObject(context_);
 }
 
 void UI::OnRequestSearch(const JSObject &obj, const JSArgs &args)
