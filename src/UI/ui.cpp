@@ -3,8 +3,16 @@
 #define WINDOW_WIDTH 600
 #define WINDOW_HEIGHT 400
 
-UI::UI()
+struct BindingUI
 {
+  static JSValue GetMessage(JSObject &obj, const JSArgs &args);
+
+  static void OnRequestSearch(const JSObject &obj, const JSArgs &args);
+};
+
+UI::UI(DataExample<int> &data_) : data(data_)
+{
+  data = data_;
   app_ = App::Create();
 
   ///
@@ -109,11 +117,13 @@ void UI::OnDOMReady(ultralight::View *caller)
   /// This is the best time to setup any JavaScript bindings.
   ///
 
-  SetJSContext(caller->js_context());
+  context_ = caller->js_context();
+  SetJSContext(context_);
 
   JSObject global = JSGlobalObject();
 
-  global["GetMessage"] = BindJSCallbackWithRetval(&UI::GetMessage);
+  global["GetData"] = BindJSCallbackWithRetval(&UI::GetData);
+  global["OnRequestSearch"] = BindJSCallback(&UI::OnRequestSearch);
 }
 
 void UI::OnChangeCursor(ultralight::View *caller,
@@ -138,10 +148,22 @@ void UI::OnChangeTitle(ultralight::View *caller,
   window_->SetTitle(title.utf8().data());
 }
 
-JSValue UI::GetMessage(const JSObject &thisObject, const JSArgs &args)
+JSValue UI::GetData(const JSObject &obj, const JSArgs &args)
 {
-  ///
-  /// Return our message to JavaScript as a JSValue.
-  ///
-  return JSValue("Hello from C++!<br/>Ultralight rocks!");
+  JSValue resData = JSValue(data.getData());
+  JSValue resId = JSValue(data.getId());
+  JSObject res;
+  JSObjectSetProperty(context_, res, JSStringCreateWithUTF8CString("data"), resData, NULL, NULL);
+  JSObjectSetProperty(context_, res, JSStringCreateWithUTF8CString("id"), resId, NULL, NULL);
+
+  return res;
+}
+
+void UI::OnRequestSearch(const JSObject &obj, const JSArgs &args)
+{
+  if (args.size() == 1)
+  {
+    ultralight::String search = args[0];
+    String searchUTF = search.utf16();
+  }
 }

@@ -3,11 +3,34 @@ import "./styles.scss";
 
 const Test: React.FC = () => {
   const [test, setTest] = useState("NAO");
-  const getMessage = () => {
+  const calledFromCPP = () => {
     //@ts-ignore
-    setTest(window["GetMessage"]());
+    setTest(window["GetData"]()["data"]);
   };
-  return <button onClick={() => getMessage()}>{test}</button>;
+
+  function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    //@ts-ignore
+    window["OnRequestSearch"]("TEST SEARCH");
+  }
+
+  return (
+    <div className="container">
+      <button className="button-test" onClick={() => calledFromCPP()}>
+        {test}
+      </button>
+
+      <form action="submit" onSubmit={onSubmit}>
+        <input
+          type="search"
+          name="search"
+          id="search"
+          placeholder="search..."
+        />
+        <button type="submit">search</button>
+      </form>
+    </div>
+  );
 };
 
 export default Test;

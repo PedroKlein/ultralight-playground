@@ -5,6 +5,8 @@
 #include <AppCore/Overlay.h>
 #include <AppCore/JSHelpers.h>
 
+#include "../DataExample/dataExample.h"
+
 using namespace ultralight;
 
 class UI : public AppListener,
@@ -13,7 +15,7 @@ class UI : public AppListener,
            public ViewListener
 {
 public:
-  UI();
+  UI(DataExample<int> &data_);
 
   virtual ~UI();
 
@@ -42,9 +44,13 @@ public:
   virtual void OnChangeTitle(ultralight::View *caller,
                              const String &title) override;
 
-  JSValue UI::GetMessage(const JSObject &thisObject, const JSArgs &args);
+  JSValue UI::GetData(const JSObject &obj, const JSArgs &args);
+
+  void OnRequestSearch(const JSObject &obj, const JSArgs &args);
 
 protected:
+  DataExample<int> &data;
+  JSContextRef context_;
   RefPtr<App> app_;
   RefPtr<Window> window_;
   RefPtr<Overlay> overlay_;
